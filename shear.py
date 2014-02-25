@@ -3,6 +3,7 @@
 import sys
 import os
 from PIL import Image as Im
+from StringIO import StringIO
 import numpy as np
 from scipy import ndimage
 from gamera.core import *
@@ -46,9 +47,9 @@ for x in range(len(os.listdir(sys.argv[1]))-1):    ##Now in the directory of ima
 		# if os.listdir(sys.argv[1]).index(image_segment) == 0:
 		current_file = find_file("test_segment_"+str(ind)+".png")	
 	 	print current_file
-	 	# print type(current_file)
-	 			#LOAD IMAGE
-	 	raw_img=Im.open(sys.argv[1]+"/"+current_file) #I:PNG image filepath/O:copy of PNG image object
+
+		print sys.argv[1]+current_file
+		raw_img = Im.open(sys.argv[1]+current_file)
 		# raw_img.show()
 		# width, height = raw_img.size
 		# print type(raw_img)
@@ -61,24 +62,29 @@ for x in range(len(os.listdir(sys.argv[1]))-1):    ##Now in the directory of ima
 			# if ndimg.ndim == 0:
 			# 	ndimg = np.reshape(ndimg, (1,1))
 			# (p,p2,p3) = ndimg.shape
-		print type(tform1)
-		sheared_img = warp(np.asarray(raw_img),tform1) #.reshape(1,1)  
+		# print type(tform1)
+		# print type(raw_img)
+		# print type(np.asarray(raw_img))
+		
+		an_nparray=np.asarray(raw_img)
+		sheared_img = warp(an_nparray,tform1) #.reshape(1,1)  
+		# sheared_img = np.asarray(raw_img) #.reshape(1,1)
 		# Im.fromarray(np.unit16(sheared_img))
-		print "sheared"
+		# print "sheared"
 		# sheared_img2 = numpy_io.from_numpy(sheared_img)
 			# block_size = 175
 			# binary_adaptive = threshold_adaptive(sheared_img, block_size, offset=.15)
-		print "numpy tansform"
-			
+		# print "numpy tansform"
+		print sys.argv[1]+current_file[:-4]	
 		
 		if os.path.isdir(sys.argv[1]+current_file[:-4]): 
 			# sheared_img2.save_image(sys.argv[1]+'/'+current_file[:-4]+'/sheared_segment_'+str(ind)+'.png')
-			imsave(sys.argv[1]+'/'+current_file[:-4]+'/sheared_segment_'+str(ind)+'.png',sheared_img)
+			imsave(sys.argv[1]+current_file[:-4]+'/sheared_segment_'+str(ind)+'.png',sheared_img)
 			print "saving"
 		elif not os.path.exists(sys.argv[1]+current_file[:-4]):
 			os.makedirs(sys.argv[1]+current_file[:-4])
 	    	# sheared_img2.save_image(sys.argv[1]+'/'+current_file[:-4]+'/sheared_segment_'+str(ind)+'.png')
-	    	imsave(sys.argv[1]+'/'+current_file[:-4]+'/sheared_segment_'+str(ind)+'.png',sheared_img)
+	    	imsave(sys.argv[1]+current_file[:-4]+'/sheared_segment_'+str(ind)+'.png',sheared_img)
 	    	print "making dir and saving"
 		x+=1
 	else:
