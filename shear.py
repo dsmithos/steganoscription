@@ -10,6 +10,7 @@ from gamera.core import *
 from pil_io import *
 from skimage.io import imread, imsave
 from skimage.transform import warp, AffineTransform
+from skimage import data
 # from skimage.filter import threshold_adaptive
 # from skimage.filter import canny
 # from skimage import exposure
@@ -40,7 +41,7 @@ def find_file(file):
 
 
 ind = 1
-for x in range(len(os.listdir(sys.argv[1]))-1):    ##Now in the directory of images (1 dir = 1 document)
+for x in range(len(os.listdir(sys.argv[1]))):    ##Now in the directory of images (1 dir = 1 document)
 	# print os.listdir(sys.argv[1])[x]
 	
 	if str(ind) == find_between(find_file("test_segment_"+str(ind)+".png"),"test_segment_","."):
@@ -49,32 +50,22 @@ for x in range(len(os.listdir(sys.argv[1]))-1):    ##Now in the directory of ima
 	 	print current_file
 
 		print sys.argv[1]+current_file
-		raw_img = Im.open(sys.argv[1]+current_file)
+		raw_img = imread(sys.argv[1]+current_file)
 		# raw_img.show()
 		# width, height = raw_img.size
-		# print type(raw_img)
+		print type(raw_img)
 		# print raw_img.mode
-		# print np.asarray(raw_img)
-		tform1 = AffineTransform(shear=0.65, translation=(0,15)) #I:shear|trans parameters/O: Atrans object
+		print np.asarray(raw_img)
+		tform1 = AffineTransform(shear=1.6)#, translation=(0,15)) #I:shear|trans parameters/O: Atrans object
 		print "affine transform"	
-			# if not isinstance(ndimg, np.ndarray):
-			# 	raise TypeError("Input not a ndarray")
-			# if ndimg.ndim == 0:
-			# 	ndimg = np.reshape(ndimg, (1,1))
-			# (p,p2,p3) = ndimg.shape
-		# print type(tform1)
-		# print type(raw_img)
-		# print type(np.asarray(raw_img))
-		
-		an_nparray=np.asarray(raw_img)
-		sheared_img = warp(an_nparray,tform1) #.reshape(1,1)  
-		# sheared_img = np.asarray(raw_img) #.reshape(1,1)
-		# Im.fromarray(np.unit16(sheared_img))
-		# print "sheared"
-		# sheared_img2 = numpy_io.from_numpy(sheared_img)
-			# block_size = 175
-			# binary_adaptive = threshold_adaptive(sheared_img, block_size, offset=.15)
-		# print "numpy tansform"
+		# if not isinstance(raw_img, np.ndarray):
+		# 	raise TypeError("Input not a ndarray")
+		# if raw_img.ndim == 0:
+		# 	raw_img = np.reshape(raw_img, (1,1))
+		# (p,p2) = raw_img.shape
+
+		sheared_img = warp(raw_img,tform1) #.reshape(1,1)  
+
 		print sys.argv[1]+current_file[:-4]	
 		
 		if os.path.isdir(sys.argv[1]+current_file[:-4]): 
