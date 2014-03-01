@@ -28,7 +28,11 @@ img = load_image(sys.argv[1])
 (width, height) = pilimage.size
 image_data = np.asarray(pilimage)
 
-colHisto = list(img.projection_cols())
+# print image_data
+colHisto = sum(image_data) 
+colHisto = colHisto - min(colHisto)
+
+
 
 # print colHisto
 position_pixelcount = list(enumerate(colHisto))
@@ -62,16 +66,20 @@ def local_minima(array,wind=10, min_dis=80):
 
     #Compare point i to previous point, if i-previous point < 20, then delete previous point
     for i in range(len(minima_list)-1,-1,-1):    
-        if ((minima_list[i][0] - minima_list[i-1][0]) < min_dis):
+        # print len(minima_list)
+        # print width
+        # print(minima_list)
+        if (((minima_list[i][0] - minima_list[i-1][0]) < min_dis) or (minima_list[i-1][1] > 1)):
             del minima_list[i-1]
-        if minima_list[i-1][1] > 0:
+        # if minima_list[i-1][1] > 0:
             # print minima_list[i-1][1]
-            del minima_list[i-1]
-
+            # del minima_list[i-1]
+    # print colHisto
     return minima_list
 
 
 
+# print colHisto
 #####FOR DEBUGGING#####
 ##DRAW LINES##  draw_line(startpoint,endpoint,pixel value, thickness)
 for i in local_minima(colHisto): 

@@ -4,28 +4,30 @@ from PIL import Image as Im
 import numpy as np
 from skimage.io import imread, imsave
 
-pilimage = Im.open(sys.argv[1])
-(width, height) = pilimage.size
+
+def shear3(a, strength=-1, shift_axis=1, increase_axis=0):
+    if shift_axis > increase_axis:
+        shift_axis -= 1
+    res = np.empty_like(a)
+    index = np.index_exp[:] * increase_axis
+    roll = np.roll
+    for i in range(0, a.shape[increase_axis]):
+        index_i = index + (i,)
+        res[index_i] = roll(a[index_i], -i * strength, shift_axis)
+    return res
+
+
+pilimage = imread(sys.argv[1])
+# (width, height) = pilimage.size
 image_data = np.asarray(pilimage)
 
+height = len(pilimage)
+width = len(pilimage[0])
 
-slope = 0.2    # one pixel shift every five rows
-shift = 0.0    # current pixelshift along x-axis
-outputImage = np.zeros((height,width))
+output = shear3(image_data)
 
-for i in range(height-1,-1,-1):
-  row = i
-  integershift = round(shift)  #round to nearest integer
-  
-  for i in range(width-1,-1,-1):
-    col=i
-    sourcecolumn = col + integershift  #get the pixel from this column
-    
-    if sourcecolumn < col:
-      outputImage[row][col] = image_data[row][sourcecolumn]
-    else:  				#draw black if we're outside the inputImage
-      outputImage[row][col] = 0
-  
-  shift += slope
+print type(output)
 
-imsave(sys.argv[2],outputImage)
+imsave(sys.argv[2],output)
+
+
